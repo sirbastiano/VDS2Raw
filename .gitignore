@@ -3,8 +3,8 @@ checkpoint/epoch_239.pth
 
 # data files:
 *.DS_Store
-*.png
 *.json
+*.png
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

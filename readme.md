@@ -27,28 +27,33 @@ To set up the project and run the code, please follow these steps:
 1. Clone the repository:
 
 ```diff
-+ git clone https://github.com/your-username/your-repo.git
-cd your-repo
++ git clone https://github.com/sirbastiano/VDS2Raw
+cd VDS2Raw
 ```
 
 2. Set up the Python environment. It is recommended to use a virtual environment to avoid conflicts with other Python packages. The bash script provided installs also the required dependencies:
 
 ```diff
-+ source mmdet_install.sh # On Windows, still beta
++ source mmdet_install.sh # (On Windows, still beta)
 ```
 
 **Note:**  
 Make sure you have the necessary CUDA and CUDNN libraries installed if you plan to train the model on a GPU.
 
-## Dataset
+## Data
 
-To train and evaluate the vessel detection model, you will need a dataset of vessels in S-2 imagery. Ensure that your dataset is properly annotated with bounding box labels for the vessels.
+To train and evaluate the vessel detection model, you will need a dataset of vessels in S-2 imagery. Ensure that your dataset is in proper format: 
 
-Place your dataset in a directory and configure the path to the dataset in the project's configuration file (`config.py` or similar).
+- Provided image examples: https://zenodo.org/record/7982468#.ZIiLxS8QOo4 
+- Repo for handling L0 data: https://github.com/ESA-PhiLab/PyRawS
+
+Place your data in the "input_data" directory.
 
 ## Inference
 
 To perform inference and detect vessels in new S-2 imagery, follow these steps:
+
+0. Download weights () and place them in the "checkpoint" directory.
 
 1. Configure the inference settings in the project's configuration file. Specify the path to the trained model checkpoint and any other necessary parameters.
 
@@ -57,7 +62,7 @@ To perform inference and detect vessels in new S-2 imagery, follow these steps:
 ```diff
 + python inference.py --img_path /path/to/image
 ```
-The script will load the trained model, process the input imagery, and generate bounding box predictions for the vessels present in the images.
+The script will load the trained model, process the input imagery, and generate bounding box predictions for the vessels present in the images in the output_results folder.
 
 3. Evaluate the results and analyze the model's performance on the new imagery.
 

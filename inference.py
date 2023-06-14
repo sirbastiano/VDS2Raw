@@ -117,5 +117,5 @@ if __name__ == '__main__':
     new_name = base_name + '_pred.png'
     savepath = Path('output_results') / new_name
     # Draw the bounding boxes on the image
-    draw_bounding_boxes(img, boxes, scores = scores, backend_args=dict(figsize=(40, 40), dpi=100), savepath=savepath, score_threshold=args.threshold)
+    draw_bounding_boxes(img, boxes, scores = scores, backend_args=dict(figsize=(10, 10), dpi=100), savepath=savepath, score_threshold=args.threshold)
     print('Image saved.')

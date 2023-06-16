@@ -58,7 +58,7 @@ Place your data in the "input_data" directory.
 
 To perform inference and detect vessels in new S-2 imagery, follow these steps:
 
-0. Download weights () and place them in the "checkpoint" directory.
+0. Download weights (https://drive.google.com/file/d/1EUTRbgCrp4X7Ii9p7OiLscQ5u5aMKFZi/view?usp=share_link) and place them in the "checkpoint" directory.
 
 1. Configure the inference settings in the project's configuration file. Specify the path to the trained model checkpoint and any other necessary parameters.
 

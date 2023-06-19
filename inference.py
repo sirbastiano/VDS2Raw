@@ -20,6 +20,7 @@ parser.add_argument('--img_path', type=str, help='path to the image')
 parser.add_argument('--threshold', type=float, default=0.5, help='Confidence threshold for detection')
 # add device argument
 parser.add_argument('--device', type=str, default='cpu', help='device used for inference: cpu or cuda:0')
+parser.add_argument('--bgr', type=bool, default=False, help='device used for inference: cpu or cuda:0')
 
 def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05, backend_args=None, savepath=None):
     """
@@ -70,6 +71,11 @@ def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05
     # do not show the image
     plt.close(fig)
  
+def enhance_luminosity_and_contrast(image, alpha, beta):
+    # Perform contrast and brightness adjustment
+    adjusted_image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
+    return adjusted_image 
+
 if __name__ == '__main__':
     args = parser.parse_args()
     # define dataloader 
@@ -93,9 +99,28 @@ if __name__ == '__main__':
 
     load = loader(results={'img_path': img_path})
     img = load['img']
-    result = inference_detector(model, img)
+    # deepcopy this img
+    # check shape of the img:
+    H,W,C = img.shape
+    if C != 3:
+        print('Image is not in the right format. Trying to convert...')
+        img = img = img.transpose(1, 2, 0)
+    
+    img_orig = img.copy()
 
-    img = mmcv.imconvert(img, 'bgr', 'rgb')
+    if args.bgr:
+        print('Convert image to rgb')
+        img = mmcv.imconvert(img, 'bgr', 'rgb')
+    
+    # Define the values for luminosity and contrast adjustment
+    alpha = 20  # Luminosity adjustment (1.0 is neutral)
+    beta = 0   # Contrast adjustment (0 is neutral)
+
+    # Enhance luminosity and contrast
+    img = enhance_luminosity_and_contrast(img, alpha, beta)
+
+    result = inference_detector(model, img)
+     
     print('Inference completed. Saving image...')
 
     predictions = list(result.pred_instances.all_items())
@@ -117,5 +142,5 @@ if __name__ == '__main__':
     new_name = base_name + '_pred.png'
     savepath = Path('output_results') / new_name
     # Draw the bounding boxes on the image
-    draw_bounding_boxes(img, boxes, scores = scores, backend_args=dict(figsize=(10, 10), dpi=100), savepath=savepath, score_threshold=args.threshold)
+    draw_bounding_boxes(img_orig, boxes, scores = scores, backend_args=dict(figsize=(10, 10), dpi=100), savepath=savepath, score_threshold=args.threshold)
     print('Image saved.')

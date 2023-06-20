@@ -2,7 +2,7 @@ dataset_type = 'CocoDataset'
 data_root = 'data/vessels/'
 metainfo = dict(classes=('vessel', ), palette=[(220, 20, 60)])
 backend_args = None
-IMG_SCALE = (2048, 2048)
+IMG_SCALE = (3048, 3048)
 train_pipeline = [
     dict(
         type='LoadImageFromFile',
@@ -11,7 +11,7 @@ train_pipeline = [
         imdecode_backend='tifffile',
         backend_args=None),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', scale=(2048, 2048), keep_ratio=True),
+    dict(type='Resize', scale=IMG_SCALE, keep_ratio=True),
     dict(type='RandomFlip', prob=0.5, direction='horizontal'),
     dict(type='RandomFlip', prob=0.5, direction='vertical'),
     dict(type='PackDetInputs')
@@ -23,7 +23,7 @@ test_pipeline = [
         color_type='color',
         imdecode_backend='tifffile',
         backend_args=None),
-    dict(type='Resize', scale=(2048, 2048), keep_ratio=True),
+    dict(type='Resize', scale=IMG_SCALE, keep_ratio=True),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='PackDetInputs',
@@ -51,7 +51,7 @@ train_dataloader = dict(
                 imdecode_backend='tifffile',
                 backend_args=None),
             dict(type='LoadAnnotations', with_bbox=True),
-            dict(type='Resize', scale=(2048, 2048), keep_ratio=True),
+            dict(type='Resize', scale=IMG_SCALE, keep_ratio=True),
             dict(type='RandomFlip', prob=0.5, direction='horizontal'),
             dict(type='RandomFlip', prob=0.5, direction='vertical'),
             dict(type='PackDetInputs')
@@ -77,7 +77,7 @@ val_dataloader = dict(
                 color_type='color',
                 imdecode_backend='tifffile',
                 backend_args=None),
-            dict(type='Resize', scale=(2048, 2048), keep_ratio=True),
+            dict(type='Resize', scale=IMG_SCALE, keep_ratio=True),
             dict(type='LoadAnnotations', with_bbox=True),
             dict(
                 type='PackDetInputs',
@@ -106,7 +106,7 @@ test_dataloader = dict(
                 color_type='color',
                 imdecode_backend='tifffile',
                 backend_args=None),
-            dict(type='Resize', scale=(2048, 2048), keep_ratio=True),
+            dict(type='Resize', scale=IMG_SCALE, keep_ratio=True),
             dict(type='LoadAnnotations', with_bbox=True),
             dict(
                 type='PackDetInputs',

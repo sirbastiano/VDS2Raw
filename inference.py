@@ -67,7 +67,7 @@ def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05
                     color='white', fontsize=8, bbox=dict(facecolor='r', alpha=0.7))
     
     if savepath is not None:
-        fig.savefig(savepath)
+        fig.savefig(savepath, dpi=300, bbox_inches='tight')
     # do not show the image
     plt.close(fig)
  

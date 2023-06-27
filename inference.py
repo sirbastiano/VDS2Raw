@@ -20,12 +20,10 @@ parser.add_argument('--img_path', type=str, help='path to the image')
 parser.add_argument('--threshold', type=float, default=0.5, help='Confidence threshold for detection')
 # add device argument
 parser.add_argument('--device', type=str, default='cpu', help='device used for inference: cpu or cuda:0')
-parser.add_argument('--bgr', type=bool, default=False, help='device used for inference: cpu or cuda:0')
 
 def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05, backend_args=None, savepath=None):
     """
     Draws bounding boxes on an image.
-
     Args:
         image (numpy.ndarray): The image to draw bounding boxes on.
         bounding_boxes (list): A list of bounding boxes in the format [x_min, y_min, x_max, y_max].
@@ -33,11 +31,10 @@ def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05
         score_threshold (float, optional): The minimum score required to draw a bounding box. Defaults to 0.05.
         backend_args (dict, optional): A dictionary of arguments to pass to the matplotlib backend. Defaults to None.
         savepath (str, optional): The path to save the image with bounding boxes. Defaults to None.
-
     Returns:
         None
     """
-    
+
     # Create figure and axes
     fig, ax = plt.subplots(1, **backend_args)
 
@@ -48,7 +45,7 @@ def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05
     for i, bbox in enumerate(bounding_boxes):
         if scores is not None and scores[i] < score_threshold:
             continue
-        
+
         x_min, y_min, x_max, y_max = bbox
         width = x_max - x_min
         height = y_max - y_min
@@ -65,16 +62,11 @@ def draw_bounding_boxes(image, bounding_boxes, scores=None, score_threshold=0.05
             score = scores[i]
             ax.text(x_max+5, y_max+5, f'Score: {score:.2f}',
                     color='white', fontsize=8, bbox=dict(facecolor='r', alpha=0.7))
-    
+
     if savepath is not None:
-        fig.savefig(savepath, dpi=300, bbox_inches='tight')
+        fig.savefig(savepath)
     # do not show the image
     plt.close(fig)
- 
-def enhance_luminosity_and_contrast(image, alpha, beta):
-    # Perform contrast and brightness adjustment
-    adjusted_image = cv2.convertScaleAbs(image, alpha=alpha, beta=beta)
-    return adjusted_image 
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -99,28 +91,9 @@ if __name__ == '__main__':
 
     load = loader(results={'img_path': img_path})
     img = load['img']
-    # deepcopy this img
-    # check shape of the img:
-    H,W,C = img.shape
-    if C != 3:
-        print('Image is not in the right format. Trying to convert...')
-        img = img = img.transpose(1, 2, 0)
-    
-    img_orig = img.copy()
-
-    if args.bgr:
-        print('Convert image to rgb')
-        img = mmcv.imconvert(img, 'bgr', 'rgb')
-    
-    # Define the values for luminosity and contrast adjustment
-    alpha = 20  # Luminosity adjustment (1.0 is neutral)
-    beta = 0   # Contrast adjustment (0 is neutral)
-
-    # Enhance luminosity and contrast
-    img = enhance_luminosity_and_contrast(img, alpha, beta)
-
     result = inference_detector(model, img)
-     
+
+    img = mmcv.imconvert(img, 'bgr', 'rgb')
     print('Inference completed. Saving image...')
 
     predictions = list(result.pred_instances.all_items())
@@ -128,7 +101,7 @@ if __name__ == '__main__':
     keyholder={}
     for item in predictions:
         keyholder[item[0]]=item[1]
-        
+
     scores, boxes, labels = keyholder['scores'], keyholder['bboxes'], keyholder['labels']
     # write the scores and boxes to a json file:
     output_pred_path = Path('output_results') / (base_name + '_predictions.json')
@@ -142,5 +115,5 @@ if __name__ == '__main__':
     new_name = base_name + '_pred.png'
     savepath = Path('output_results') / new_name
     # Draw the bounding boxes on the image
-    draw_bounding_boxes(img_orig, boxes, scores = scores, backend_args=dict(figsize=(10, 10), dpi=100), savepath=savepath, score_threshold=args.threshold)
-    print('Image saved.')
+    draw_bounding_boxes(img, boxes, scores = scores, backend_args=dict(figsize=(40, 40), dpi=100), savepath=savepath, score_threshold=args.threshold)
+    print('Image saved.') 

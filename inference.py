@@ -74,7 +74,7 @@ if __name__ == '__main__':
     loader = LoadImageFromFile(to_float32=False, color_type='color', imdecode_backend='tifffile', backend_args=None)
     # Specify the path to model config and checkpoint file
     config_file = 'checkpoint/vfnet_r18_fpn_1x_vessel.py'
-    checkpoint_file = 'checkpoint/epoch_239.pth'
+    checkpoint_file = 'checkpoint/best_coco_bbox_mAP50_0.554.pth.pth'
 
     # Build the model from a config file and a checkpoint file
     model = init_detector(config_file, checkpoint_file, device=args.device)

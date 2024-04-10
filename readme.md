@@ -51,7 +51,7 @@ To train and evaluate the vessel detection model, you will need a dataset of ves
 
 - Provided image examples: https://zenodo.org/record/7982468#.ZIiLxS8QOo4 
 - Repo for handling L0 data: https://github.com/ESA-PhiLab/PyRawS
-
+- DATASET: https://zenodo.org/records/7982468
 Place your data in the "input_data" directory.
 
 ## Inference
